@@ -4,8 +4,8 @@ Helper tools for my projects... I'm too lazy to install every piece of SW on all
 
 Usually, I put following lines to `~/.bash_aliases`
 
-```
-alias travis='docker run --rm -v $PWD:/repo -v ~/.travis:/travis kwart/tools-in-docker'
+```bash
+alias travis='docker run -it --rm -v $PWD:/repo -v ~/.travis:/travis kwart/tools-in-docker'
 alias docker-scripts='docker run --rm -v $PWD:/repo -v /var/run/docker.sock:/var/run/docker.sock --entrypoint /usr/local/bin/docker-scripts kwart/tools-in-docker'
 ```
 
@@ -14,21 +14,28 @@ alias docker-scripts='docker run --rm -v $PWD:/repo -v /var/run/docker.sock:/var
 Based on André Dumas work - https://github.com/andredumas/docker-travis-ci-cli
 
 The image contains [travis ci client](http://blog.travis-ci.com/2013-01-14-new-client/) - following 
-[installation instructions](https://github.com/travis-ci/travis.rb#installation), using Ruby 1.9.3.
+[installation instructions](https://github.com/travis-ci/travis.rb#installation).
 
-I primarily used this to `travis setup releases`.
+Primarily used to `travis setup releases`
 
-### Usage
+### Sample Usage - Configure GitHub Releases
 
-```
-$ alias travis='docker run --rm -v $PWD:/repo -v ~/.travis:/travis kwart/tools-in-docker'
-$ travis whoami
-not logged in, please run travis login
-$ travis login --github-token <public_repo personal access token>
-$ travis whoami
-kwart
-$ travis setup releases
-# Follow on screen instructions
+```bash
+# Create a simple alias to run the in-docker travis client
+alias travis='docker run -it --rm -v $PWD:/repo -v ~/.travis:/travis kwart/tools-in-docker'
+
+# Create Travis configuration file
+cat << EOT >.travis.yml
+language: java
+jdk: oraclejdk8
+EOT
+
+# Setup GitHub releases
+travis setup releases
+
+# ...
+# Follow on screen instructions - login with GitHub username and password and specify which files to release
+# If something goes wrong check the directory ~/.travis on the host
 ```
 
 ## Marek Goldmann's docker-scripts
